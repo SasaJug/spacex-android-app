@@ -1,0 +1,16 @@
+query LaunchList(){
+  launches {
+    id
+    rocket {
+      rocket {
+        id
+        name
+        type
+      }
+    }
+    links {
+      mission_patch_small
+    }
+    mission_name
+  }
+}
