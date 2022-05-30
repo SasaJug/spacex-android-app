@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.sasaj.spacexapi.databinding.LaunchItemBinding
 
-class LaunchListAdapter(private val launches: List<LaunchListQuery.Launch>) :
+class LaunchListAdapter(private val launches: List<LaunchListQuery.Launch?>) :
     RecyclerView.Adapter<LaunchListAdapter.ViewHolder>() {
 
     class ViewHolder(val binding: LaunchItemBinding) : RecyclerView.ViewHolder(binding.root)
@@ -22,12 +22,11 @@ class LaunchListAdapter(private val launches: List<LaunchListQuery.Launch>) :
         return ViewHolder(binding)
     }
 
-
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val launch = launches[position]
-        holder.binding.site.text = launch.rocket?.rocket?.name ?: ""
-        holder.binding.missionName.text = launch.mission_name
-        holder.binding.missionPatch.load(launch.links?.mission_patch_small) {
+        holder.binding.site.text = launch?.rocket?.rocket?.name ?: ""
+        holder.binding.missionName.text = launch?.mission_name
+        holder.binding.missionPatch.load(launch?.links?.mission_patch_small) {
             placeholder(R.drawable.ic_placeholder)
         }
         if (position == launches.size - 1) {

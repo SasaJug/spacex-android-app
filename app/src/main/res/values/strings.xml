@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">RocketReserver</string>
+    <string name="app_name">SpaceX</string>
     <string name="oh_no">Oh no… Something went wrong.</string>
     <string name="book_now">Book now</string>
     <string name="cancel">Cancel</string>
