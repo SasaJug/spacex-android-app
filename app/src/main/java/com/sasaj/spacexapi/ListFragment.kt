@@ -1,27 +1,29 @@
 package com.sasaj.spacexapi
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.compose.foundation.lazy.items
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.lifecycle.observe
-import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.channels.Channel
 
 class ListFragment : Fragment() {
@@ -46,19 +48,24 @@ class ListFragment : Fragment() {
         view.apply {
             setContent {
                 Surface(color = MaterialTheme.colors.background) {
-   
+                    Launches()
                 }
             }
         }
         return view
     }
 
+    @Composable
+    fun Launches() {
+        val launchesState = viewModel.list.observeAsState(initial = emptyList())
+        LaunchesList(launches = launchesState.value)
+    }
+
 
     @Composable
-    private fun LaunchesList(launches: List<LaunchListQuery.Launch?>){
-//        val launchesState = viewModel.list.observeAsState()
-        LazyColumn(modifier = Modifier.padding(vertical = 4.dp)){
-            items(items = launches){ launch->
+    private fun LaunchesList(launches: List<LaunchListQuery.Launch?>) {
+        LazyColumn(modifier = Modifier.padding(vertical = 4.dp)) {
+            items(items = launches) { launch ->
                 launch?.let {
                     LaunchRow(launch)
                 }
@@ -68,8 +75,15 @@ class ListFragment : Fragment() {
 
     @Composable
     private fun LaunchRow(launch: LaunchListQuery.Launch) {
-        Surface(color = MaterialTheme.colors.primary) {
-            Text (text = "${launch.mission_name}", modifier = Modifier.padding(8.dp))
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Image(
+                painterResource(R.drawable.ic_placeholder), "", modifier = Modifier
+                    .size(100.dp)
+            )
+            Column {
+                Text(launch.mission_name ?: "")
+                Text(launch.rocket?.rocket?.name ?: "")
+            }
         }
     }
 

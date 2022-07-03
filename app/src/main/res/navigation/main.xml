@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/launchListFragment"
-        android:name="com.sasaj.spacexapi.LaunchListFragment"
+        android:name="com.sasaj.spacexapi.ListFragment"
         tools:layout="@layout/launch_list_fragment">
         <action
             android:id="@+id/openLaunchDetails"
