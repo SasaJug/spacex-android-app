@@ -10,4 +10,6 @@
     <string name="tripBooked">%1$d trip(s) has(have) been booked 🚀🚀</string>
     <string name="tripCancelled">A trip has been cancelled</string>
     <string name="subscriptionError">Oops, something wrong happened</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
