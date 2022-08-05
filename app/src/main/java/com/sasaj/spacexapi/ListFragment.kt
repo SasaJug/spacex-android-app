@@ -19,11 +19,11 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import coil.compose.rememberImagePainter
 import kotlinx.coroutines.channels.Channel
 
 class ListFragment : Fragment() {
@@ -76,8 +76,11 @@ class ListFragment : Fragment() {
     @Composable
     private fun LaunchRow(launch: LaunchListQuery.Launch) {
         Row(verticalAlignment = Alignment.CenterVertically) {
+            val painter = rememberImagePainter(
+                launch.links?.mission_patch_small ?: "",
+                builder = {})
             Image(
-                painterResource(R.drawable.ic_placeholder), "", modifier = Modifier
+                painter, "", modifier = Modifier
                     .size(100.dp)
             )
             Column {
@@ -91,7 +94,7 @@ class ListFragment : Fragment() {
     @Composable
     fun DefaultPreview() {
         Surface(color = MaterialTheme.colors.background) {
-            LaunchesList(listOf(LaunchListQuery.Launch("",null,null, "Mission 1")))
+            LaunchesList(listOf(LaunchListQuery.Launch("", null, null, "Mission 1")))
         }
     }
 }
