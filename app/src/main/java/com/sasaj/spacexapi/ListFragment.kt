@@ -139,7 +139,7 @@ class ListFragment : Fragment() {
                         "",
                         null,
                         null,
-                        LaunchListQuery.Links(null, null), "", null
+                        null,
                     )
                 )
             )

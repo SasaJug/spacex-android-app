@@ -99,7 +99,7 @@ class LaunchDetailsFragment : Fragment() {
                 val painter = rememberImagePainter(launch.links?.mission_patch)
                 val state = painter.state
                 if(state is AsyncImagePainter.State.Loading){
-                    progress(isDisplayed = true)
+                    progress()
                 } else {
                     Image(
                         modifier = Modifier.size(200.dp),
@@ -111,10 +111,9 @@ class LaunchDetailsFragment : Fragment() {
             }
             title(text = "Mission details")
             paragraph(text = launch.details ?: "")
-            paragraph(text = "Date: ${launch.launch_date_utc}")
-            paragraph(text = "Launch site: ${launch.launch_site?.site_name_long}")
+            paragraph(text = "Date: ${launch.launch_date_utc ?: ""}")
+            paragraph(text = "Launch site: ${launch.launch_site?.site_name_long ?: ""}")
             link(requireContext(), "Wikipedia page", launch.links?.wikipedia)
-//            link(requireContext(), "Watch launch video", launch.links?.video_link)
         }
     }
 }
@@ -140,7 +139,7 @@ private fun link(context: Context, linkText: String, url: String?) {
 
 @Composable
 private fun title(text: String) {
-    Text(text, modifier = Modifier.padding(0.dp, 16.dp, 0.dp, 8.dp), fontWeight = FontWeight.Bold, fontSize = 20.sp)
+    Text(text, modifier = Modifier.padding(0.dp, 16.dp, 0.dp, 0.dp), fontWeight = FontWeight.Bold, fontSize = 20.sp)
 }
 
 @Composable
@@ -151,8 +150,7 @@ private fun paragraph(text: String?) {
 }
 
 @Composable
-private fun progress(isDisplayed: Boolean) {
-    if (isDisplayed) {
+private fun progress() {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -162,7 +160,6 @@ private fun progress(isDisplayed: Boolean) {
         ) {
             CircularProgressIndicator()
         }
-    }
 }
 
 

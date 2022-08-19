@@ -1,11 +1,8 @@
 query LaunchList(){
     launches {
-      details
       id
-      launch_date_local
       links {
         mission_patch_small
-        mission_patch
       }
       mission_name
       rocket {
