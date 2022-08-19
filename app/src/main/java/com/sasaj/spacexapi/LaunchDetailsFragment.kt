@@ -1,14 +1,15 @@
 package com.sasaj.spacexapi
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -18,18 +19,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import coil.compose.AsyncImagePainter
 import coil.compose.rememberImagePainter
 import kotlinx.coroutines.channels.Channel
-import org.intellij.lang.annotations.JdkConstants
+
 
 class LaunchDetailsFragment : Fragment() {
     private val viewModel: DetailsViewModel by viewModels()
@@ -60,7 +66,7 @@ class LaunchDetailsFragment : Fragment() {
 
     @Composable
     fun MainContent(){
-        val launchDetails = viewModel.details.observeAsState(initial =LaunchDetailsQuery.Launch(null, null, null, null, null, null)).value
+        val launchDetails = viewModel.details.observeAsState(initial =LaunchDetailsQuery.Launch(null, null, null, null, null, null, null, null)).value
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -90,15 +96,45 @@ class LaunchDetailsFragment : Fragment() {
     private fun LaunchDetails(launch: LaunchDetailsQuery.Launch) {
         Column(modifier = Modifier.padding(8.dp), horizontalAlignment = Alignment.Start) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                Image(
-                    modifier = Modifier.size(200.dp),
-                    painter = rememberImagePainter(launch.links?.mission_patch),
-                    contentDescription = "Mission patch",
-                )
+                val painter = rememberImagePainter(launch.links?.mission_patch)
+                val state = painter.state
+                if(state is AsyncImagePainter.State.Loading){
+                    progress(isDisplayed = true)
+                } else {
+                    Image(
+                        modifier = Modifier.size(200.dp),
+                        painter = painter,
+                        contentDescription = "Mission patch",
+                    )
+                }
+
             }
             title(text = "Mission details")
             paragraph(text = launch.details ?: "")
+            paragraph(text = "Date: ${launch.launch_date_utc}")
+            paragraph(text = "Launch site: ${launch.launch_site?.site_name_long}")
+            link(requireContext(), "Wikipedia page", launch.links?.wikipedia)
+            link(requireContext(), "Watch launch video", launch.links?.video_link)
         }
+    }
+}
+
+@Composable
+private fun link(context: Context, linkText: String, url: String?) {
+    url?.let {
+        ClickableText(modifier = Modifier.padding(0.dp, 10.dp, 0.dp, 0.dp), text = buildAnnotatedString {
+            withStyle(
+                style = SpanStyle(
+                    color = Color.Blue,
+                    textDecoration = TextDecoration.Underline
+                )
+            ) {
+                append(linkText)
+            }
+        }, onClick = {
+            val myIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            startActivity(context, myIntent, null)
+        })
     }
 }
 
@@ -109,7 +145,22 @@ private fun title(text: String) {
 
 @Composable
 private fun paragraph(text: String) {
-    Text(text, fontWeight = FontWeight.Normal, fontSize = 16.sp)
+    Text(text, modifier = Modifier.padding(0.dp, 10.dp, 0.dp, 0.dp), fontWeight = FontWeight.Normal, fontSize = 16.sp)
+}
+
+@Composable
+private fun progress(isDisplayed: Boolean) {
+    if (isDisplayed) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp)
+                .padding(0.dp, 70.dp, 0.dp, 0.dp),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            CircularProgressIndicator()
+        }
+    }
 }
 
 
