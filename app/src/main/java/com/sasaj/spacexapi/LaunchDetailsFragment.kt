@@ -114,7 +114,7 @@ class LaunchDetailsFragment : Fragment() {
             paragraph(text = "Date: ${launch.launch_date_utc}")
             paragraph(text = "Launch site: ${launch.launch_site?.site_name_long}")
             link(requireContext(), "Wikipedia page", launch.links?.wikipedia)
-            link(requireContext(), "Watch launch video", launch.links?.video_link)
+//            link(requireContext(), "Watch launch video", launch.links?.video_link)
         }
     }
 }
@@ -140,12 +140,14 @@ private fun link(context: Context, linkText: String, url: String?) {
 
 @Composable
 private fun title(text: String) {
-    Text(text, modifier = Modifier.padding(16.dp), fontWeight = FontWeight.Bold, fontSize = 20.sp)
+    Text(text, modifier = Modifier.padding(0.dp, 16.dp, 0.dp, 8.dp), fontWeight = FontWeight.Bold, fontSize = 20.sp)
 }
 
 @Composable
-private fun paragraph(text: String) {
-    Text(text, modifier = Modifier.padding(0.dp, 10.dp, 0.dp, 0.dp), fontWeight = FontWeight.Normal, fontSize = 16.sp)
+private fun paragraph(text: String?) {
+    text?.let {
+        Text(it, modifier = Modifier.padding(0.dp, 10.dp, 0.dp, 0.dp), fontWeight = FontWeight.Normal, fontSize = 16.sp)
+    }
 }
 
 @Composable
