@@ -33,7 +33,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import coil.compose.AsyncImagePainter
-import coil.compose.rememberImagePainter
+import coil.compose.rememberAsyncImagePainter
 import kotlinx.coroutines.channels.Channel
 
 
@@ -96,10 +96,10 @@ class LaunchDetailsFragment : Fragment() {
     private fun LaunchDetails(launch: LaunchDetailsQuery.Launch) {
         Column(modifier = Modifier.padding(8.dp), horizontalAlignment = Alignment.Start) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                val painter = rememberImagePainter(launch.links?.mission_patch)
+                val painter = rememberAsyncImagePainter(launch.links?.mission_patch)
                 val state = painter.state
                 if(state is AsyncImagePainter.State.Loading){
-                    progress()
+                    Progress()
                 } else {
                     Image(
                         modifier = Modifier.size(200.dp),
@@ -109,11 +109,13 @@ class LaunchDetailsFragment : Fragment() {
                 }
 
             }
-            title(text = "Mission details")
-            paragraph(text = launch.details ?: "")
-            paragraph(text = "Date: ${launch.launch_date_utc ?: ""}")
-            paragraph(text = "Launch site: ${launch.launch_site?.site_name_long ?: ""}")
+            Title(text = "Mission details")
+            Paragraph(text = launch.details ?: "")
+            Paragraph(text = "Date: ${launch.launch_date_utc ?: ""}")
+            Paragraph(text = "Launch site: ${launch.launch_site?.site_name_long ?: ""}")
             link(requireContext(), "Wikipedia page", launch.links?.wikipedia)
+            link(requireContext(), "Watch launch video", launch.links?.video_link)
+
         }
     }
 }
@@ -138,28 +140,38 @@ private fun link(context: Context, linkText: String, url: String?) {
 }
 
 @Composable
-private fun title(text: String) {
-    Text(text, modifier = Modifier.padding(0.dp, 16.dp, 0.dp, 0.dp), fontWeight = FontWeight.Bold, fontSize = 20.sp)
+private fun Title(text: String) {
+    Text(
+        text,
+        modifier = Modifier.padding(0.dp, 16.dp, 0.dp, 0.dp),
+        fontWeight = FontWeight.Bold,
+        fontSize = 20.sp
+    )
 }
 
 @Composable
-private fun paragraph(text: String?) {
+private fun Paragraph(text: String?) {
     text?.let {
-        Text(it, modifier = Modifier.padding(0.dp, 10.dp, 0.dp, 0.dp), fontWeight = FontWeight.Normal, fontSize = 16.sp)
+        Text(
+            it,
+            modifier = Modifier.padding(0.dp, 10.dp, 0.dp, 0.dp),
+            fontWeight = FontWeight.Normal,
+            fontSize = 16.sp
+        )
     }
 }
 
 @Composable
-private fun progress() {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(200.dp)
-                .padding(0.dp, 70.dp, 0.dp, 0.dp),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            CircularProgressIndicator()
-        }
+private fun Progress() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(200.dp)
+            .padding(0.dp, 70.dp, 0.dp, 0.dp),
+        horizontalArrangement = Arrangement.Center
+    ) {
+        CircularProgressIndicator()
+    }
 }
 
 
